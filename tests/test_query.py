@@ -16,14 +16,13 @@
 #
 
 import csv
-import os
 
 import pandas
 import pytest
 from pandas.testing import assert_frame_equal
 
 from pydruid.query import Query, QueryBuilder
-from pydruid.utils import aggregators, filters, having, postaggregator
+from pydruid.utils import aggregators, filters, having, postaggregator, joins
 
 
 def create_query_with_results():
@@ -225,6 +224,52 @@ class TestQueryBuilder:
 
         # then
         assert subquery_dict == expected_query_dict
+
+    def test_build_join_query(self):
+        """ Tests building a query with a join """
+        expected_query_dict = {
+            "queryType": "groupBy",
+            "dataSource": {
+                "type": "join",
+                "joinType": "INNER",
+                "left": {
+                    "type": "query",
+                    "query": {
+                        "dataSource": "things",
+                        "dimensions": ["id", "a"],
+                        "queryType": "groupBy",
+                    },
+                },
+                "right": {
+                    "type": "query",
+                    "query": {
+                        "dataSource": "other_things",
+                        "dimensions": ["id", "b"],
+                        "queryType": "groupBy",
+                    },
+                },
+                "rightPrefix": "other",
+                "condition": "id = other_id",
+            },
+            "dimensions": ["id"],
+        }
+
+        builder = QueryBuilder()
+
+        left = builder.subquery({"datasource": "things", "dimensions": ["id", "a"]})
+
+        right = builder.subquery(
+            {"datasource": "other_things", "dimensions": ["id", "b"]}
+        )
+
+        joined = joins.InnerJoin(
+            left=left, right=right, right_prefix="other", condition="id = other_id"
+        )
+
+        query = builder.groupby({"datasource": joined, "dimensions": ["id"]})
+
+        # then
+        assert query.query_dict == expected_query_dict
 
 
 class TestQuery:

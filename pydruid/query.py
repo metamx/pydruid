@@ -21,6 +21,7 @@ from pydruid.utils.aggregators import build_aggregators
 from pydruid.utils.dimensions import build_dimension
 from pydruid.utils.filters import Filter
 from pydruid.utils.having import Having
+from pydruid.utils.joins import Join
 from pydruid.utils.postaggregator import Postaggregator
 from pydruid.utils.query_utils import UnicodeWriter
 
@@ -241,13 +242,16 @@ class QueryBuilder(object):
                 and all([isinstance(x, str) for x in datasource])
             )
             or isinstance(datasource, dict)
+            or isinstance(datasource, Join)
         ):
             raise ValueError(
                 "Datasource definition not valid. Must be string or "
-                "dict or list of strings"
+                "dict or list of strings or Join"
             )
         if isinstance(datasource, str):
             return datasource
+        elif isinstance(datasource, Join):
+            return Join.build_join(datasource)
         else:
             return {"type": "union", "dataSources": datasource}
 
