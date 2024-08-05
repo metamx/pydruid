@@ -32,6 +32,8 @@ class Filter:
         "bound",
         "interval",
         "extraction",
+        "like",
+        "search",
     )
 
     def __init__(self, extraction_function=None, ordering="lexicographic", **args):

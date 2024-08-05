@@ -458,9 +458,45 @@ class TestFilter:
         }
         assert actual == expected
 
+    def test_search_filter_with_extraction_function(self):
+        extraction_fn = dimensions.RegexExtraction("([a-b])")
+        actual = filters.Filter.build_filter(
+            filters.Filter(
+                type="search",
+                dimension="dim",
+                value="val",
+                extraction_function=extraction_fn,
+            )
+        )
+        expected = {
+            "type": "search",
+            "dimension": "dim",
+            "query": {"type": "contains", "caseSensitive": "false", "value": "val"},
+            "extractionFn": {"type": "regex", "expr": "([a-b])"},
+        }
+        assert actual == expected
+
     def test_like_filter(self):
         actual = filters.Filter.build_filter(
             filters.Filter(type="like", dimension="dim", pattern="%val%")
         )
         expected = {"type": "like", "dimension": "dim", "pattern": "%val%"}
+        assert actual == expected
+
+    def test_like_filter_with_extraction_function(self):
+        extraction_fn = dimensions.RegexExtraction("([a-b])")
+        actual = filters.Filter.build_filter(
+            filters.Filter(
+                type="like",
+                dimension="dim",
+                pattern="%val%",
+                extraction_function=extraction_fn,
+            )
+        )
+        expected = {
+            "type": "like",
+            "dimension": "dim",
+            "pattern": "%val%",
+            "extractionFn": {"type": "regex", "expr": "([a-b])"},
+        }
         assert actual == expected
