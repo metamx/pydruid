@@ -67,6 +67,10 @@ def doublemax(raw_metric):
     return {"type": "doubleMax", "fieldName": raw_metric}
 
 
+def doublemean(raw_metric):
+    return {"type": "doubleMean", "fieldName": raw_metric}
+
+
 def count(raw_metric):
     return {"type": "count", "fieldName": raw_metric}
 
