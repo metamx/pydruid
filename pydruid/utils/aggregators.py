@@ -74,6 +74,8 @@ def count(raw_metric):
 def hyperunique(raw_metric):
     return {"type": "hyperUnique", "fieldName": raw_metric}
 
+def expression(raw_metric, aggregation):
+    return {"expression": "\""+raw_metric+"\"", "type":aggregation}
 
 def cardinality(raw_column, by_row=False):
     if type(raw_column) is not list:
