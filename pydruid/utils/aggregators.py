@@ -43,6 +43,10 @@ def max(raw_metric):
     return {"type": "max", "fieldName": raw_metric}
 
 
+def longlast(raw_metric):
+    return {"type": "longLast", "fieldName": raw_metric}
+
+
 def longsum(raw_metric):
     return {"type": "longSum", "fieldName": raw_metric}
 
@@ -53,6 +57,10 @@ def longmin(raw_metric):
 
 def longmax(raw_metric):
     return {"type": "longMax", "fieldName": raw_metric}
+
+
+def doublelast(raw_metric):
+    return {"type": "doubleLast", "fieldName": raw_metric}
 
 
 def doublesum(raw_metric):
