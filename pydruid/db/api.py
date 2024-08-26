@@ -417,20 +417,27 @@ def rows_from_chunks(chunks):
             body = "".join((body, chunk))
 
         # find last complete row
+        # see also: https://www.json.org/
         boundary = 0
         brackets = 0
         in_string = False
+        in_escape = False
         for i, char in enumerate(body):
-            if char == '"':
-                if not in_string:
-                    in_string = True
-                elif body[i - 1] != "\\":
-                    in_string = False
-
             if in_string:
+                if in_escape:
+                    # we're just looking for string boundaries, so we can
+                    # ignore the trailing X in escapes like \uXXXX, since each
+                    # of those X characters must be alphanumeric anyway
+                    in_escape = False
+                elif char == "\\":
+                    in_escape = True
+                elif char == '"':
+                    in_string = False
                 continue
 
-            if char == "{":
+            if char == '"':
+                in_string = True
+            elif char == "{":
                 brackets += 1
             elif char == "}":
                 brackets -= 1

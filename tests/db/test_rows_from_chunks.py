@@ -36,6 +36,18 @@ class RowsFromChunksTestSuite(unittest.TestCase):
         result = list(rows_from_chunks(chunks))
         self.assertEqual(result, expected)
 
+    def test_rows_from_chunks_string_ending_with_backslash(self):
+        chunks = [r'[{"name": "\\"}]']
+        expected = [{"name": "\\"}]
+        result = list(rows_from_chunks(chunks))
+        self.assertEqual(result, expected)
+
+    def test_rows_from_chunks_multiple_rows_ending_with_backslashes(self):
+        chunks = [r'[{"name": "alice"}, {"name": "bob\\"}, {"name": "charlie\\"}]']
+        expected = [{"name": "alice"}, {"name": "bob\\"}, {"name": "charlie\\"}]
+        result = list(rows_from_chunks(chunks))
+        self.assertEqual(result, expected)
+
 
 if __name__ == "__main__":
     unittest.main()
