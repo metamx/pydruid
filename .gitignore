@@ -16,3 +16,4 @@ __pycache__
 env*
 venv
 Pipfile*
+.venv
