@@ -369,7 +369,7 @@ class Cursor(object):
         if r.encoding is None:
             r.encoding = "utf-8"
         # raise any error messages
-        if r.status_code != 200:
+        if r.status_code != 200 and r.status_code != 202:
             try:
                 payload = r.json()
             except Exception:
