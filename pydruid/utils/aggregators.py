@@ -16,12 +16,13 @@
 from .filters import Filter
 
 
-def thetasketch(raw_column, isinputthetasketch=False, size=16384):
+def thetasketch(raw_column, isinputthetasketch=False, size=16384, should_finalize=True):
     return {
         "type": "thetaSketch",
         "fieldName": raw_column,
         "isInputThetaSketch": isinputthetasketch,
         "size": size,
+        "shouldFinalize": should_finalize,
     }
 
 

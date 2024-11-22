@@ -88,7 +88,7 @@ class TestAggregators:
             "agg9": aggregators.thetasketch("dim1"),
             "agg10": aggregators.thetasketch("metric7"),
             "agg11": aggregators.thetasketch(
-                "metric8", isinputthetasketch=True, size=8192
+                "metric8", isinputthetasketch=True, size=8192, should_finalize=False
             ),
         }
         built_agg = aggregators.build_aggregators(agg_input)
@@ -116,6 +116,7 @@ class TestAggregators:
                 "type": "thetaSketch",
                 "fieldName": "dim1",
                 "isInputThetaSketch": False,
+                "shouldFinalize": True,
                 "size": 16384,
             },
             {
@@ -123,6 +124,7 @@ class TestAggregators:
                 "type": "thetaSketch",
                 "fieldName": "metric7",
                 "isInputThetaSketch": False,
+                "shouldFinalize": True,
                 "size": 16384,
             },
             {
@@ -130,6 +132,7 @@ class TestAggregators:
                 "type": "thetaSketch",
                 "fieldName": "metric8",
                 "isInputThetaSketch": True,
+                "shouldFinalize": False,
                 "size": 8192,
             },
         ]
@@ -186,6 +189,7 @@ class TestAggregators:
                 "type": "thetaSketch",
                 "fieldName": "dim1",
                 "isInputThetaSketch": False,
+                "shouldFinalize": True,
                 "size": 16384,
             },
             {
@@ -193,6 +197,7 @@ class TestAggregators:
                 "type": "thetaSketch",
                 "fieldName": "metric7",
                 "isInputThetaSketch": False,
+                "shouldFinalize": True,
                 "size": 16384,
             },
             {
@@ -200,6 +205,7 @@ class TestAggregators:
                 "type": "thetaSketch",
                 "fieldName": "metric8",
                 "isInputThetaSketch": True,
+                "shouldFinalize": True,
                 "size": 8192,
             },
         ]
