@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import textwrap
 import urllib
-from io import StringIO
+from io import BytesIO, StringIO
 from unittest.mock import Mock, patch
 
 import pytest
@@ -22,7 +22,10 @@ def create_blank_query():
 
 def _http_error(code, msg, data=""):
     # Need a file-like object for the response data
-    fp = StringIO(data)
+    if isinstance(data, bytes):
+        fp = BytesIO(data)
+    else:
+        fp = StringIO(data)
     return urllib.error.HTTPError(
         url="http://fakeurl:8080/druid/v2/", hdrs={}, code=code, msg=msg, fp=fp
     )
@@ -120,6 +123,29 @@ class TestPyDruid:
         )
 
     @patch("pydruid.client.urllib.request.urlopen")
+    def test_druid_returns_string_error_bytes_error_response(self, mock_urlopen):
+        # given
+        message = b"Error as bytes, please decode me"
+        mock_urlopen.side_effect = _http_error(500, "Internal Server Error", message)
+        client = create_client()
+
+        # when / then
+        with pytest.raises(IOError) as e:
+            client.topn(
+                datasource="testdatasource",
+                granularity="all",
+                intervals="2015-12-29/pt1h",
+                aggregations={"count": doublesum("count")},
+                dimension="user_name",
+                metric="count",
+                filter=Dimension("user_lang") == "en",
+                threshold=1,
+                context={"timeout": 1000},
+            )
+
+        assert "Error as bytes, please decode me" in str(e.value)
+
+    @patch("pydruid.client.urllib.request.urlopen")
     def test_druid_returns_results(self, mock_urlopen):
         # given
         response = Mock()
@@ -185,7 +211,8 @@ class TestPyDruid:
         )
 
         # when / then
-        # assert that last_query.export_tsv method was called (it should throw an exception, given empty path)
+        # assert that last_query.export_tsv method was called (it should throw
+        # an exception, given empty path)
         with pytest.raises(TypeError):
             client.export_tsv(None)
 

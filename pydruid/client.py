@@ -560,6 +560,9 @@ class PyDruid(BaseDruidClient):
             if e.code == 500:
                 # has Druid returned an error?
                 try:
+                    if isinstance(err, bytes):
+                        # Decode the error before serialize it to JSON
+                        err = err.decode("utf-8")
                     err = json.loads(err)
                 except ValueError:
                     if HTML_ERROR.search(err):
