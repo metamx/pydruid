@@ -6,6 +6,8 @@ from urllib import parse
 from prompt_toolkit import prompt
 from prompt_toolkit.completion.word_completer import WordCompleter
 from prompt_toolkit.history import FileHistory
+from prompt_toolkit.lexers import PygmentsLexer
+from prompt_toolkit.styles.pygments import style_from_pygments_cls
 from pygments.lexers import SqlLexer
 from pygments.style import Style
 from pygments.styles.default import DefaultStyle
@@ -170,9 +172,9 @@ def main():
         try:
             query = prompt(
                 "> ",
-                lexer=SqlLexer,
+                lexer=PygmentsLexer(SqlLexer),
                 completer=sql_completer,
-                style=DocumentStyle,
+                style=style_from_pygments_cls(DocumentStyle),
                 history=history,
             )
         except (EOFError, KeyboardInterrupt):
