@@ -214,7 +214,7 @@ class Bound(Filter):
         ordering="lexicographic",
         extraction_function=None,
     ):
-        if not lower and not upper:
+        if lower is None and upper is None:
             raise ValueError("Must include either lower or upper or both")
         Filter.__init__(
             self,
