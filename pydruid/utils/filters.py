@@ -79,11 +79,11 @@ class Filter:
             self.filter["filter"].update(
                 {
                     "dimension": args["dimension"],
-                    "lower": args["lower"],
-                    "lowerStrict": args["lowerStrict"],
-                    "upper": args["upper"],
-                    "upperStrict": args["upperStrict"],
-                    "alphaNumeric": args["alphaNumeric"],
+                    "lower": args.get("lower"),
+                    "lowerStrict": args.get("lowerStrict", False),
+                    "upper": args.get("upper"),
+                    "upperStrict": args.get("upperStrict", False),
+                    "alphaNumeric": args.get("alphaNumeric", False),
                     "ordering": ordering,
                 }
             )
