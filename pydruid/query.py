@@ -394,6 +394,7 @@ class QueryBuilder(object):
             "dimensions",
             "limit_spec",
             "virtualColumns",
+            "subtotalsSpec"
         ]
         self.validate_query(query_type, valid_parts, args)
         return self.build_query(query_type, args)
